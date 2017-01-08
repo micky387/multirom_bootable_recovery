@@ -560,6 +560,14 @@ ifeq ($(BOARD_CACHEIMAGE_PARTITION_SIZE),)
 LOCAL_REQUIRED_MODULES := recovery-persist recovery-refresh
 endif
 
+ifeq ($(TW_INCLUDE_CRYPTO), true)
+    ifeq ($(TW_CRYPTO_USE_SYSTEM_VOLD), true)
+        LOCAL_ADDITIONAL_DEPENDENCIES += \
+            init.recovery.vold_decrypt.rc \
+            init.vold_decrypt.sh
+    endif
+endif
+
 include $(BUILD_EXECUTABLE)
 
 ifneq ($(TW_USE_TOOLBOX), true)
