@@ -5,6 +5,7 @@
 #include <ctype.h>
 #include <linux/capability.h>
 #include <linux/xattr.h>
+#include <sys/mount.h>
 #include <sys/xattr.h>
 #include <sys/vfs.h>
 
@@ -318,10 +319,15 @@ bool MultiROM::setRomsPath(std::string loc)
 	else
 		sprintf(cmd, "mount %s /mnt", dev.c_str());
 
-	if(system(cmd) != 0)
+	if (system(cmd) != 0)
 	{
-		LOGERR("Failed to mount location \"%s\"!\n", loc.c_str());
-		return false;
+		LOGINFO("Failed to mount location \"%s\", trying C mount()\n", loc.c_str());
+
+		if (mount(dev.c_str(), "/mnt", partition->Current_File_System.c_str(), 0, NULL) != 0)
+		{
+			LOGERR("Failed to mount location \"%s\" (%s)!\n", loc.c_str(), strerror(errno));
+			return false;
+		}
 	}
 
 	m_curr_roms_path = "/mnt/multirom-" TARGET_DEVICE "/";
