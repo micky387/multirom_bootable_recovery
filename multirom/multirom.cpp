@@ -6,6 +6,7 @@
 #include <linux/capability.h>
 #include <linux/xattr.h>
 #include <linux/loop.h>
+#include <sys/sysmacros.h>
 #include <sys/xattr.h>
 #include <sys/vfs.h>
 #include <mntent.h>
